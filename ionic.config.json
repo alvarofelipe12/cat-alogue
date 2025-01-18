@@ -1,5 +1,7 @@
 {
   "name": "cat-alogue",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }
