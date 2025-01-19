@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'cat-alogue',
+  appId: 'io.catalogue.alvarofelipe12.github',
+  appName: 'Cat_alogue',
   webDir: 'www',
   plugins: {
     SplashScreen: {

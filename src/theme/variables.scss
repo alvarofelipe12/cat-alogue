@@ -1,2 +1,12 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
+@font-face {
+  font-family: 'Righteous';
+  font-style: normal;
+  font-weight: normal;
+  src: url('../assets/fonts/righteous/Righteous-Regular.ttf');
+}
+
+.text-logo {
+  font-family: "Righteous";
+}

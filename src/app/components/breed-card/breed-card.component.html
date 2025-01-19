@@ -1,0 +1,21 @@
+<ion-item *ngFor="let breed of breedsList; trackBy: trackById" [routerLink]="['./', breed.id]">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{breed.name}}</ion-card-title>
+      <ion-card-subtitle>{{breed.alt_names}}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-img [alt]="breed.name" [src]="breed.image?.url" />
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            País de Origen: {{breed.origin}}
+          </ion-col>
+          <ion-col class="ion-text-end">
+            Inteligencia: {{breed.intelligence}}
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ion-item>

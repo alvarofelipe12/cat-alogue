@@ -4,7 +4,16 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+      },
+      {
+        path: ':breedId',
+        loadChildren: () => import('./pages/breed-detail/breed-detail.module').then(m => m.BreedDetailPageModule)
+      }
+    ],
   },
   {
     path: '',
