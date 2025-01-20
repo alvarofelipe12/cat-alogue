@@ -4,6 +4,9 @@
       Cat_alogue
     </ion-title>
   </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar [debounce]="1000" (ionInput)="handleInput($event)" (ionClear)="handleInput($event)"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>

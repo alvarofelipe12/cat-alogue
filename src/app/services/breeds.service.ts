@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Breed } from '../models/breed.model';
 import { BreedImage } from '../models/breed-image.model';
-import { forkJoin, map, of, switchMap } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, switchMap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,15 +12,15 @@ export class BreedsService {
 
   constructor(private http: HttpClient) { }
 
-  getBreeds() {
-    return this.http.get<Breed[]>(`${environment.apiUrl}${environment.versionUrl}breeds`);
+  getBreeds(): Observable<Breed[]> {
+    return this.http.get<Breed[]>(`${environment.apiUrl}${environment.versionUrl}breeds?limit=10`);
   }
 
-  getBreedImage(id: string) {
+  getBreedImage(id: string): Observable<BreedImage> {
     return this.http.get<BreedImage>(`${environment.apiUrl}${environment.versionUrl}images/${id}`);
   }
 
-  getBreedsWithImages() {
+  getBreedsWithImages(): Observable<Breed[]> {
     const storedBreeds = localStorage.getItem('breedsWithImages');
     if (storedBreeds) {
       return of(JSON.parse(storedBreeds));
@@ -35,6 +35,11 @@ export class BreedsService {
           // Each observable makes an HTTP GET request to the
           // getBreedImage endpoint using the reference_image_id from the breed object.
           const breedObservables = breeds.map(breed => {
+            if (!breed.reference_image_id) {
+              return of({
+                ...breed
+              });
+            }
             return this.getBreedImage(breed.reference_image_id)
               .pipe(
                 // The map operator is used to transform the response by adding the image field
@@ -45,6 +50,10 @@ export class BreedsService {
                     ...breed,
                     image
                   }
+                }), catchError(error => {
+                  if (error.status === 400) {
+                    return of({ ...breed });
+                  } return throwError(() => error);
                 })
               );
           });
@@ -60,5 +69,9 @@ export class BreedsService {
           return breedsWithImages;
         })
       );
+  }
+
+  searchBreeds(query: string): Observable<Breed[]> {
+    return this.http.get<Breed[]>(`${environment.apiUrl}${environment.versionUrl}breeds/search?q=${query}&attach_image=1`);
   }
 }

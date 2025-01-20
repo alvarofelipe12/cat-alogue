@@ -63,8 +63,24 @@ export class HomePage implements OnInit {
   constructor(private breedsService: BreedsService) { }
 
   ngOnInit(): void {
-    // this.breedsService.getBreeds().subscribe(breeds => {
-    //   this.loadedBreeds = breeds;
-    // });
+    this.breedsService.getBreedsWithImages().subscribe(breeds => {
+      this.loadedBreeds = breeds;
+    });
+  }
+
+  handleInput(event: Event): void {
+    const target = event.target as HTMLIonSearchbarElement;
+    const query = target.value?.toLowerCase() || '';
+    if (!query) {
+      this.breedsService.getBreedsWithImages().subscribe(breeds => {
+        this.loadedBreeds = breeds;
+      });
+    }
+    this.loadedBreeds = this.loadedBreeds.filter((d) => d.name.toLowerCase().includes(query));
+    if (!this.loadedBreeds.length) {
+      this.breedsService.searchBreeds(query).subscribe(breeds => {
+        this.loadedBreeds = breeds;
+      });
+    }
   }
 }
