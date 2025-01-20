@@ -16,7 +16,7 @@
 
 <ion-spinner *ngIf="!loadedBreed" class="spinner" color="primary"></ion-spinner>
 <ng-container *ngIf="loadedBreed">
-  <div class="" slot="fixed" fixedSlotPlacement="before" class="ion-padding">
+  <div slot="fixed" fixedSlotPlacement="before" class="ion-padding" *ngIf="!isLeaving">
     <ion-img class="img-thumbnail" [alt]="loadedBreed.name" [src]="loadedBreed.image?.url"
       (ionError)="setDefaultPic($event)" />
   </div>
