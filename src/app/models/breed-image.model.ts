@@ -4,6 +4,6 @@ export interface BreedImage {
   id: string;
   url: string;
   breeds?: Breed[];
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
 }

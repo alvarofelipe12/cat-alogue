@@ -7,15 +7,23 @@ import { Breed } from 'src/app/models/breed.model';
   styleUrls: ['./breed-card.component.scss'],
   standalone: false,
 })
-export class BreedCardComponent  implements OnInit {
+export class BreedCardComponent implements OnInit {
   @Input() breedsList: Breed[] = [];
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   trackById(index: number, item: Breed) {
     return item.id;
   }
 
+  setDefaultPic(event: Event) {
+    const target = event.target as HTMLIonImgElement;
+    if (target.src?.includes('jpg')) {
+      target.src = target.src?.replace('jpg', 'png');
+    } else {
+      target.src = 'assets/images/placeholder.jpeg';
+    }
+  }
 }

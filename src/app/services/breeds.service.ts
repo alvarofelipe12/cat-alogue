@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Breed } from '../models/breed.model';
 import { BreedImage } from '../models/breed-image.model';
-import { catchError, forkJoin, map, Observable, of, switchMap, throwError } from 'rxjs';
+import { forkJoin, Observable, of, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class BreedsService {
   constructor(private http: HttpClient) { }
 
   getBreeds(): Observable<Breed[]> {
-    return this.http.get<Breed[]>(`${environment.apiUrl}${environment.versionUrl}breeds?limit=10`);
+    return this.http.get<Breed[]>(`${environment.apiUrl}${environment.versionUrl}breeds`);
   }
 
   getBreedImage(id: string): Observable<BreedImage> {
@@ -21,11 +21,6 @@ export class BreedsService {
   }
 
   getBreedsWithImages(): Observable<Breed[]> {
-    const storedBreeds = localStorage.getItem('breedsWithImages');
-    if (storedBreeds) {
-      return of(JSON.parse(storedBreeds));
-    }
-
     return this.getBreeds()
       .pipe(
         // The switchMap operator is used to take the array of breeds returned from the first API call and
@@ -37,41 +32,56 @@ export class BreedsService {
           const breedObservables = breeds.map(breed => {
             if (!breed.reference_image_id) {
               return of({
-                ...breed
+                ...breed,
+                image: {
+                  id: '',
+                  url: 'assets/images/placeholder.jpeg'
+                }
               });
             }
-            return this.getBreedImage(breed.reference_image_id)
-              .pipe(
-                // The map operator is used to transform the response by adding the image field
-                // to the breed object. The spread operator (...breed) is used to keep all existing
-                // breed properties and add the new image property.
-                map(image => {
-                  return {
-                    ...breed,
-                    image
-                  }
-                }), catchError(error => {
-                  if (error.status === 400) {
-                    return of({ ...breed });
-                  } return throwError(() => error);
-                })
-              );
+            return of({
+              ...breed,
+              image: {
+                id: breed.reference_image_id,
+                url: `https://cdn2.thecatapi.com/images/${breed.reference_image_id}.jpg`
+              }
+            });
           });
           // The forkJoin operator combines all the observables in breedObservables
           // into a single observable. This observable emits an array when all inner observables
           // (i.e., the individual image requests) have completed.
           return forkJoin(breedObservables);
-        }),
-        map(breedsWithImages => {
-          // The map operator is used to store the array of breeds with images in localStorage
-          // so that it can be retrieved later without making another API call since these are limited.
-          localStorage.setItem('breedsWithImages', JSON.stringify(breedsWithImages));
-          return breedsWithImages;
         })
       );
   }
 
   searchBreeds(query: string): Observable<Breed[]> {
     return this.http.get<Breed[]>(`${environment.apiUrl}${environment.versionUrl}breeds/search?q=${query}&attach_image=1`);
+  }
+
+  getBreed(breedId: string): Observable<Breed> {
+    return this.http.get<Breed>(`${environment.apiUrl}${environment.versionUrl}breeds/${breedId}`)
+      .pipe(
+        // The switchMap operator is used to take the array of breeds returned from the first API call and
+        // switch to a new observable. This allows us to perform further operations on each breed.
+        switchMap(breed => {
+          if (!breed.reference_image_id) {
+            return of({
+              ...breed,
+              image: {
+                id: '',
+                url: 'assets/images/placeholder.jpeg'
+              }
+            });
+          }
+          return of({
+            ...breed,
+            image: {
+              id: breed.reference_image_id,
+              url: `https://cdn2.thecatapi.com/images/${breed.reference_image_id}.jpg`
+            }
+          });
+        })
+      );
   }
 }

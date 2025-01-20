@@ -1,30 +1,35 @@
-<ion-item *ngFor="let breed of breedsList; trackBy: trackById" [routerLink]="['./', breed.id]">
-  <ion-card>
-    <ion-card-header>
-      <ion-grid class="ion-no-margin">
-        <ion-row>
-          <ion-col >
-            <ion-card-title>{{breed.name}}</ion-card-title>
-          </ion-col>
-          <ion-col class="ion-text-end">
-            <ion-card-subtitle>Más...</ion-card-subtitle>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-      <ion-card-subtitle>{{breed.alt_names}}</ion-card-subtitle>
-    </ion-card-header>
-    <ion-img [alt]="breed.name" [src]="breed.image?.url" />
-    <ion-card-content>
-      <ion-grid>
-        <ion-row>
-          <ion-col>
-            País de Origen: {{breed.origin}}
-          </ion-col>
-          <ion-col class="ion-text-end">
-            Inteligencia: {{breed.intelligence}}
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card-content>
-  </ion-card>
-</ion-item>
+<ng-container *ngIf="!breedsList.length; else elseTemplate">
+  <p class="ion-text-center">Not found</p>
+</ng-container>
+<ng-template #elseTemplate>
+  <ion-item *ngFor="let breed of breedsList; trackBy: trackById" [routerLink]="['./', breed.id]">
+    <ion-card>
+      <ion-card-header>
+        <ion-grid class="ion-no-margin ion-no-padding">
+          <ion-row>
+            <ion-col >
+              <ion-card-title>{{breed.name}}</ion-card-title>
+            </ion-col>
+            <ion-col class="ion-text-end">
+              <ion-card-subtitle>More...</ion-card-subtitle>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-card-subtitle>{{breed.alt_names}}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-img class="img-thumbnail" [alt]="breed.name" [src]="breed.image?.url" (ionError)="setDefaultPic($event)"/>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              Country of Origin: {{breed.origin}}
+            </ion-col>
+            <ion-col class="ion-text-end">
+              Intelligence: {{breed.intelligence}}
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </ion-item>
+</ng-template>

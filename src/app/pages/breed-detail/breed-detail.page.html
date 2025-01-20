@@ -1,13 +1,52 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>breed-detail</ion-title>
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title class="text-logo ion-text-center">
+      <ng-container *ngIf="loadedBreed; else elseTemplate">
+        {{loadedBreed.name}}
+      </ng-container>
+      <ng-template #elseTemplate>
+        Loading breed...
+      </ng-template>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">breed-detail</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>
+<ion-spinner *ngIf="!loadedBreed" class="spinner" color="primary"></ion-spinner>
+<ng-container *ngIf="loadedBreed">
+  <div class="" slot="fixed" fixedSlotPlacement="before" class="ion-padding">
+    <ion-img class="img-thumbnail" [alt]="loadedBreed.name" [src]="loadedBreed.image?.url"
+      (ionError)="setDefaultPic($event)" />
+  </div>
+  <ion-content class="ion-padding">
+    <div>
+      <h2>{{loadedBreed.description}}</h2>
+      <h2>Country of Origin: {{loadedBreed.origin}}</h2>
+      <h2>Intelligence: {{loadedBreed.intelligence}}</h2>
+      <h2>Adaptability: {{loadedBreed.adaptability}}</h2>
+      <h2>Affection Level: {{loadedBreed.affection_level}}</h2>
+      <h2>Altern Names: {{loadedBreed.alt_names}}</h2>
+      <h2>Child Friendly: {{loadedBreed.child_friendly}}</h2>
+      <h2>Dog Friendly: {{loadedBreed.dog_friendly}}</h2>
+      <h2>Energy Level: {{loadedBreed.energy_level}}</h2>
+      <h2>Grooming: {{loadedBreed.grooming}}</h2>
+      <h2>Hairless: {{loadedBreed.hairless? 'Yes' : 'No'}}</h2>
+      <h2>Health Issues: {{loadedBreed.health_issues}}</h2>
+      <h2>Hypoallergenic: {{loadedBreed.hypoallergenic? 'Yes' : 'No'}}</h2>
+      <h2>Indoor: {{loadedBreed.indoor ? 'Yes' : 'No'}}</h2>
+      <h2>Lap: {{loadedBreed.lap ? 'Yes' : 'No'}}</h2>
+      <h2>Life Span: {{loadedBreed.life_span}} years</h2>
+      <h2>Natural: {{loadedBreed.natural ? 'Yes' : 'No'}}</h2>
+      <h2>Rare: {{loadedBreed.rare ? 'Yes' : 'No'}}</h2>
+      <h2>Shedding Level: {{loadedBreed.shedding_level}}</h2>
+      <h2>Short Legs: {{loadedBreed.short_legs ? 'Yes' : 'No'}}</h2>
+      <h2>Social Needs: {{loadedBreed.social_needs}}</h2>
+      <h2>Stranger Friendly: {{loadedBreed.stranger_friendly}}</h2>
+      <h2>Temperament: {{loadedBreed.temperament}}</h2>
+      <h2>Vocalization: {{loadedBreed.vocalisation}}</h2>
+    </div>
+
+  </ion-content>
+</ng-container>

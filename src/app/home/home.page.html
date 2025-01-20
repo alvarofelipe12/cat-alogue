@@ -5,12 +5,13 @@
     </ion-title>
   </ion-toolbar>
   <ion-toolbar>
-    <ion-searchbar [debounce]="1000" (ionInput)="handleInput($event)" (ionClear)="handleInput($event)"></ion-searchbar>
+    <ion-searchbar [debounce]="1000" (ionInput)="handleInput($event)"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <ion-spinner class="spinner" *ngIf="isLoadingBreeds" color="primary"></ion-spinner>
+  <ion-list *ngIf="!isLoadingBreeds">
     <app-breed-card [breedsList]="loadedBreeds"></app-breed-card>
   </ion-list>
 </ion-content>
