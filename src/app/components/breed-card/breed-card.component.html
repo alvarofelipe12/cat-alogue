@@ -2,8 +2,8 @@
   <p class="ion-text-center">Not found</p>
 </ng-container>
 <ng-template #elseTemplate>
-  <ion-item *ngFor="let breed of breedsList; trackBy: trackById" [routerLink]="['./', breed.id]">
-    <ion-card>
+  <ion-item *ngFor="let breed of breedsList; trackBy: trackById">
+    <ion-card [routerLink]="['./', breed.id]">
       <ion-card-header>
         <ion-grid class="ion-no-margin ion-no-padding">
           <ion-row>
